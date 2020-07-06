@@ -7,15 +7,6 @@ $GLOBALS['FE_MOD']['navigationMenu'][\HeimrichHannot\MenuBundle\FrontendModule\M
 $GLOBALS['FE_MOD']['navigationMenu'][\HeimrichHannot\MenuBundle\FrontendModule\CustomMenuModule::TYPE] = \HeimrichHannot\MenuBundle\FrontendModule\CustomMenuModule::class;
 
 /**
- * JS
+ * Hooks
  */
-if (System::getContainer()->get('huh.utils.container')->isFrontend()) {
-    $GLOBALS['TL_JAVASCRIPT']['contao-menu-bundle'] = 'bundles/contaomenu/contao-menu-bundle.js';
-}
-
-/**
- * CSS
- */
-if (System::getContainer()->get('huh.utils.container')->isFrontend()) {
-    $GLOBALS['TL_CSS']['contao-menu-bundle'] = 'bundles/contaomenu/contao-menu-bundle.css';
-}
+$GLOBALS['TL_HOOKS']['loadDataContainer'][] = [\HeimrichHannot\MenuBundle\EventListener\LoadDataContainerListener::class, '__invoke'];
