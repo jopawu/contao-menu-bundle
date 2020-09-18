@@ -92,7 +92,6 @@ class MenuModule extends ModuleNavigation
         $dataAttributeFields = [
             'huhMenu_maxTriggerLevel',
             'huhMenu_openDelay',
-            'huhMenu_switchDelay',
             'huhMenu_closeDelay',
         ];
 

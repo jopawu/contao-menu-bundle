@@ -5,8 +5,8 @@ $dca = &$GLOBALS['TL_DCA']['tl_module'];
 /**
  * Palettes
  */
-$dca['palettes'][\HeimrichHannot\MenuBundle\FrontendModule\MenuModule::TYPE]       = str_replace('showHidden', 'showHidden,huhMenu_maxTriggerLevel,huhMenu_openDelay,huhMenu_switchDelay,huhMenu_closeDelay', $dca['palettes']['navigation']);
-$dca['palettes'][\HeimrichHannot\MenuBundle\FrontendModule\CustomMenuModule::TYPE] = str_replace('showHidden', 'showHidden,huhMenu_maxTriggerLevel,huhMenu_openDelay,huhMenu_switchDelay,huhMenu_closeDelay', $dca['palettes']['customnav']);
+$dca['palettes'][\HeimrichHannot\MenuBundle\FrontendModule\MenuModule::TYPE]       = str_replace('showHidden', 'showHidden,huhMenu_maxTriggerLevel,huhMenu_openDelay,huhMenu_closeDelay', $dca['palettes']['navigation']);
+$dca['palettes'][\HeimrichHannot\MenuBundle\FrontendModule\CustomMenuModule::TYPE] = str_replace('showHidden', 'showHidden,huhMenu_maxTriggerLevel,huhMenu_openDelay,huhMenu_closeDelay', $dca['palettes']['customnav']);
 
 /**
  * Fields
