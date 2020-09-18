@@ -136,7 +136,17 @@ class MenuBundle {
             // remove all open classes except those which are parents
             menu.querySelectorAll('.open').forEach((element) => {
                 if (openedParents.indexOf(element) < 0) {
-                    element.classList.remove('open');
+                    let remove = true;
+
+                    Array.from(element.parentNode.children).forEach(child => {
+                        if (openedParents.indexOf(child) < 0) {
+                            remove = false;
+                        }
+                    });
+
+                    if (remove) {
+                        element.classList.remove('open');
+                    }
                 }
             });
 
