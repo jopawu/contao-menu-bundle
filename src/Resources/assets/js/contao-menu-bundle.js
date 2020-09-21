@@ -46,13 +46,16 @@ class MenuBundle {
                         return;
                     }
 
+                    MenuBundle.addClosingClassToElements([link, link.nextElementSibling]);
+
                     setTimeout(() => {
+                        MenuBundle.removeClassFromElements('closing', [link, link.nextElementSibling])
+
                         if (MenuBundle.isElementCurrentlyHovered(link) || MenuBundle.isElementCurrentlyHovered(link.nextElementSibling)) {
                             return;
                         }
 
-                        link.classList.remove('open');
-                        link.nextElementSibling.classList.remove('open');
+                        MenuBundle.removeClassFromElements('open', [link, link.nextElementSibling])
                         MenuBundle.removeMenuOpenState(menu);
                     }, closeDelay);
                 });
@@ -67,8 +70,7 @@ class MenuBundle {
                             return;
                         }
 
-                        e.target.classList.remove('open');
-                        link.classList.remove('open');
+                        MenuBundle.removeClassFromElements('open', [e.target, link])
                         MenuBundle.removeMenuOpenState(menu);
                     }, closeDelay);
                 });
@@ -114,15 +116,19 @@ class MenuBundle {
             return;
         }
 
-        if (!menu.classList.contains('open')) {
-            menu.classList.add('open');
-
-            document.dispatchEvent(new CustomEvent('huhMenu:opened', {detail: menu, bubbles: true, cancelable: true}));
-        }
+        MenuBundle.addOpeningClassToElements([menu, link, link.nextElementSibling]);
 
         setTimeout(() => {
+            MenuBundle.removeClassFromElements('opening', [menu, link, link.nextElementSibling])
+
             if (!MenuBundle.isElementCurrentlyHovered(link)) {
                 return;
+            }
+
+            if (!menu.classList.contains('open')) {
+                menu.classList.add('open');
+
+                document.dispatchEvent(new CustomEvent('huhMenu:opened', {detail: menu, bubbles: true, cancelable: true}));
             }
 
             let openedParents = [];
@@ -180,6 +186,28 @@ class MenuBundle {
 
             document.dispatchEvent(new CustomEvent('huhMenu:closed', {detail: menu, bubbles: true, cancelable: true}));
         }
+    }
+
+    static addOpeningClassToElements(elements) {
+        elements.forEach((element) => {
+            if (!element.classList.contains('opening') && !element.classList.contains('open')) {
+                element.classList.add('opening');
+            }
+        });
+    }
+
+    static removeClassFromElements(className, elements) {
+        elements.forEach((element) => {
+            element.classList.remove(className);
+        });
+    }
+
+    static addClosingClassToElements(elements) {
+        elements.forEach((element) => {
+            if (!element.classList.contains('closing') && element.classList.contains('open')) {
+                element.classList.add('closing');
+            }
+        });
     }
 }
 

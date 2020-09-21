@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2020-09-21
+- added new classes "opening" and "closing" for sub menus
+
 ## [0.1.1] - 2020-09-18
 - fixed class removal issue
 
