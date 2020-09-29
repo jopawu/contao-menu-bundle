@@ -10,6 +10,7 @@ class MenuBundle {
         document.querySelectorAll('.mod_huh_menu').forEach((menu) => {
             let maxTriggerLevel = menu.getAttribute('data-max-trigger-level'),
                 closeDelay = menu.getAttribute('data-close-delay'),
+                closingDuration = menu.getAttribute('data-closing-duration'),
                 triggerActivatedLinkClasses = [];
 
             if (maxTriggerLevel == 0) {
@@ -20,7 +21,15 @@ class MenuBundle {
                 }
             }
 
-            menu.querySelectorAll(triggerActivatedLinkClasses).forEach((link) => {
+            let links = menu.querySelectorAll(triggerActivatedLinkClasses),
+                closeBlockingElements = [];
+
+            links.forEach((link) => {
+                closeBlockingElements.push(link);
+                closeBlockingElements.push(link.nextElementSibling);
+            });
+
+            links.forEach((link) => {
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
 
@@ -46,17 +55,24 @@ class MenuBundle {
                         return;
                     }
 
-                    MenuBundle.addClosingClassToElements([link, link.nextElementSibling]);
-
                     setTimeout(() => {
-                        MenuBundle.removeClassFromElements('closing', [link, link.nextElementSibling])
-
                         if (MenuBundle.isElementCurrentlyHovered(link) || MenuBundle.isElementCurrentlyHovered(link.nextElementSibling)) {
                             return;
                         }
 
-                        MenuBundle.removeClassFromElements('open', [link, link.nextElementSibling])
-                        MenuBundle.removeMenuOpenState(menu);
+                        MenuBundle.addClosingClassToElements([link, link.nextElementSibling]);
+                        MenuBundle.addClosingClassToMenu(menu, closeBlockingElements);
+
+                        setTimeout(() => {
+                            MenuBundle.removeClassFromElements('closing', [link, link.nextElementSibling])
+
+                            if (MenuBundle.isElementCurrentlyHovered(link) || MenuBundle.isElementCurrentlyHovered(link.nextElementSibling)) {
+                                return;
+                            }
+
+                            MenuBundle.removeClassFromElements('open', [link, link.nextElementSibling]);
+                            MenuBundle.removeMenuOpenState(menu);
+                        }, closingDuration);
                     }, closeDelay);
                 });
 
@@ -70,24 +86,21 @@ class MenuBundle {
                             return;
                         }
 
-                        MenuBundle.removeClassFromElements('open', [e.target, link])
-                        MenuBundle.removeMenuOpenState(menu);
+                        MenuBundle.addClosingClassToElements([link, link.nextElementSibling]);
+                        MenuBundle.addClosingClassToMenu(menu, closeBlockingElements);
+
+                        setTimeout(() => {
+                            MenuBundle.removeClassFromElements('closing', [link, link.nextElementSibling])
+
+                            if (MenuBundle.isElementCurrentlyHovered(link) || MenuBundle.isElementCurrentlyHovered(link.nextElementSibling)) {
+                                return;
+                            }
+
+                            MenuBundle.removeClassFromElements('open', [e.target, link]);
+                            MenuBundle.removeMenuOpenState(menu);
+                        }, closingDuration);
                     }, closeDelay);
                 });
-            });
-
-            menu.addEventListener('mouseleave', (e) => {
-                setTimeout(() => {
-                    if (MenuBundle.isElementCurrentlyHovered(menu)) {
-                        return;
-                    }
-
-                    // remove all open classes
-                    menu.querySelectorAll('.open').forEach((element) => {
-                        element.classList.remove('open');
-                        MenuBundle.removeMenuOpenState(menu);
-                    });
-                }, closeDelay);
             });
 
             document.querySelector('body').addEventListener('touchstart', (e) => {
@@ -104,65 +117,74 @@ class MenuBundle {
                     menu.querySelectorAll('.open').forEach((element) => {
                         element.classList.remove('open');
                     });
+
+                    MenuBundle.removeMenuOpenState(menu);
                 }, closeDelay);
             });
         });
     }
 
     static openSubmenu(menu, link) {
-        let openDelay = menu.getAttribute('data-open-delay') ? menu.getAttribute('data-open-delay') : 0;
+        let openDelay = menu.getAttribute('data-open-delay') ? menu.getAttribute('data-open-delay') : 0,
+            openingDuration = menu.getAttribute('data-opening-duration') ? menu.getAttribute('data-opening-duration') : 0;
 
         if (link.classList.contains('open')) {
             return;
         }
 
-        MenuBundle.addOpeningClassToElements([menu, link, link.nextElementSibling]);
-
         setTimeout(() => {
-            MenuBundle.removeClassFromElements('opening', [menu, link, link.nextElementSibling])
-
             if (!MenuBundle.isElementCurrentlyHovered(link)) {
                 return;
             }
 
-            if (!menu.classList.contains('open')) {
-                menu.classList.add('open');
+            MenuBundle.addOpeningClassToElements([menu, link, link.nextElementSibling]);
 
-                document.dispatchEvent(new CustomEvent('huhMenu:opened', {detail: menu, bubbles: true, cancelable: true}));
-            }
+            setTimeout(() => {
+                MenuBundle.removeClassFromElements('opening', [menu, link, link.nextElementSibling])
 
-            let openedParents = [];
-
-            utilsBundle.dom.getAllParentNodes(link).forEach((element) => {
-                if (element.classList.contains('open')) {
-                    openedParents.push(element);
+                if (!MenuBundle.isElementCurrentlyHovered(link)) {
+                    return;
                 }
-            });
 
-            // remove all open classes except those which are parents
-            menu.querySelectorAll('.open').forEach((element) => {
-                if (openedParents.indexOf(element) < 0) {
-                    let remove = true;
+                if (!menu.classList.contains('open')) {
+                    menu.classList.add('open');
 
-                    Array.from(element.parentNode.children).forEach(child => {
-                        if (openedParents.indexOf(child) < 0) {
-                            remove = false;
-                        }
-                    });
+                    document.dispatchEvent(new CustomEvent('huhMenu:opened', {detail: menu, bubbles: true, cancelable: true}));
+                }
 
-                    if (remove) {
-                        element.classList.remove('open');
+                let openedParents = [];
+
+                utilsBundle.dom.getAllParentNodes(link).forEach((element) => {
+                    if (element.classList.contains('open')) {
+                        openedParents.push(element);
                     }
+                });
+
+                // remove all open classes except those which are parents
+                menu.querySelectorAll('.open').forEach((element) => {
+                    if (openedParents.indexOf(element) < 0) {
+                        let remove = true;
+
+                        Array.from(element.parentNode.children).forEach(child => {
+                            if (openedParents.indexOf(child) < 0) {
+                                remove = false;
+                            }
+                        });
+
+                        if (remove) {
+                            element.classList.remove('open');
+                        }
+                    }
+                });
+
+                if (!link.classList.contains('open')) {
+                    link.classList.add('open');
                 }
-            });
 
-            if (!link.classList.contains('open')) {
-                link.classList.add('open');
-            }
-
-            if (!link.nextElementSibling.classList.contains('open')) {
-                link.nextElementSibling.classList.add('open');
-            }
+                if (!link.nextElementSibling.classList.contains('open')) {
+                    link.nextElementSibling.classList.add('open');
+                }
+            }, openingDuration);
         }, openDelay);
     }
 
@@ -181,6 +203,8 @@ class MenuBundle {
     static removeMenuOpenState(menu) {
         let openedElements = menu.querySelectorAll('.open');
 
+        menu.classList.remove('closing');
+
         if (openedElements.length < 1) {
             menu.classList.remove('open');
 
@@ -188,9 +212,31 @@ class MenuBundle {
         }
     }
 
+    static addClosingClassToMenu(menu, closeBlockingElements) {
+        let openedElements = menu.querySelectorAll('.open'),
+            block = false;
+
+        for (let i = 0; i < closeBlockingElements.length; i++) {
+            if (MenuBundle.isElementCurrentlyHovered(closeBlockingElements[i])) {
+                block = true;
+                break;
+            }
+        }
+
+        if (!block && openedElements.length > 0 && !menu.classList.contains('closing') && menu.classList.contains('open')) {
+            menu.classList.add('closing');
+
+            document.dispatchEvent(new CustomEvent('huhMenu:closing', {detail: menu, bubbles: true, cancelable: true}));
+        }
+    }
+
     static addOpeningClassToElements(elements) {
         elements.forEach((element) => {
             if (!element.classList.contains('opening') && !element.classList.contains('open')) {
+                if (element.classList.contains('mod_huh_menu')) {
+                    document.dispatchEvent(new CustomEvent('huhMenu:opening', {detail: element, bubbles: true, cancelable: true}));
+                }
+
                 element.classList.add('opening');
             }
         });

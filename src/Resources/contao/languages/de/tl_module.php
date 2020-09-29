@@ -11,3 +11,7 @@ $lang['huhMenu_openDelay'][0]       = 'Verzögerung beim Aufklappen';
 $lang['huhMenu_openDelay'][1]       = 'Geben Sie hier bei Bedarf eine hier eine Zeit in ms an.';
 $lang['huhMenu_closeDelay'][0]      = 'Verzögerung beim Zuklappen';
 $lang['huhMenu_closeDelay'][1]      = 'Geben Sie hier bei Bedarf eine hier eine Zeit in ms an.';
+$lang['huhMenu_openingDuration'][0] = 'Verbleibedauer der CSS-Klasse "opening"';
+$lang['huhMenu_openingDuration'][1] = 'Geben Sie hier bei Bedarf eine hier eine Zeit in ms an.';
+$lang['huhMenu_closingDuration'][0] = 'Verbleibedauer der CSS-Klasse "closing"';
+$lang['huhMenu_closingDuration'][1] = 'Geben Sie hier bei Bedarf eine hier eine Zeit in ms an.';

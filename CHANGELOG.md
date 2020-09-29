@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2020-09-29
+- added new durations for the classes "opening" and "closing" (configurable via backend)
+- added `closing` class for the menu
+- added new events: `huhMenu:opening`, `huhMenu:closing`
+
 ## [0.2.0] - 2020-09-21
 - added new classes "opening" and "closing" for sub menus
 

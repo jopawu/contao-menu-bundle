@@ -21,10 +21,12 @@ On devices with `window.navigator.maxTouchPoints` being 0, you can also click th
 
 ### Events
 
-Event            | Description
------------------|------------
-`huhMenu:opened` | Thrown after the menu has been opened
-`huhMenu:closed` | Thrown after the menu has been closed
+Event             | Description
+------------------|------------
+`huhMenu:opening` | Thrown after the menu started opening
+`huhMenu:opened`  | Thrown after the menu has been opened
+`huhMenu:closing` | Thrown after the menu started closing
+`huhMenu:closed`  | Thrown after the menu has been closed
 
 ### Why can't submenu headers be clicked on multi-touch devices?
 
