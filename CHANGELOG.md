@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.3.1] - 2020-09-30
+- fixed menu open class issue
+
 ## [0.3.0] - 2020-09-29
 - added new durations for the classes "opening" and "closing" (configurable via backend)
 - added `closing` class for the menu

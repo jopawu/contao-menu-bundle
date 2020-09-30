@@ -71,7 +71,7 @@ class MenuBundle {
                             }
 
                             MenuBundle.removeClassFromElements('open', [link, link.nextElementSibling]);
-                            MenuBundle.removeMenuOpenState(menu);
+                            MenuBundle.removeMenuOpenState(menu, closeBlockingElements);
                         }, closingDuration);
                     }, closeDelay);
                 });
@@ -97,7 +97,7 @@ class MenuBundle {
                             }
 
                             MenuBundle.removeClassFromElements('open', [e.target, link]);
-                            MenuBundle.removeMenuOpenState(menu);
+                            MenuBundle.removeMenuOpenState(menu, closeBlockingElements);
                         }, closingDuration);
                     }, closeDelay);
                 });
@@ -118,7 +118,7 @@ class MenuBundle {
                         element.classList.remove('open');
                     });
 
-                    MenuBundle.removeMenuOpenState(menu);
+                    MenuBundle.removeMenuOpenState(menu, closeBlockingElements);
                 }, closeDelay);
             });
         });
@@ -200,12 +200,20 @@ class MenuBundle {
         return found;
     }
 
-    static removeMenuOpenState(menu) {
-        let openedElements = menu.querySelectorAll('.open');
+    static removeMenuOpenState(menu, closeBlockingElements) {
+        let openedElements = menu.querySelectorAll('.open'),
+            block = false;
 
         menu.classList.remove('closing');
 
-        if (openedElements.length < 1) {
+        for (let i = 0; i < closeBlockingElements.length; i++) {
+            if (MenuBundle.isElementCurrentlyHovered(closeBlockingElements[i])) {
+                block = true;
+                break;
+            }
+        }
+
+        if (!block && openedElements.length < 1 /*&& !MenuBundle.isElementCurrentlyHovered(menu)*/) {
             menu.classList.remove('open');
 
             document.dispatchEvent(new CustomEvent('huhMenu:closed', {detail: menu, bubbles: true, cancelable: true}));
