@@ -95,6 +95,7 @@ class MenuModule extends ModuleNavigation
             'huhMenu_closeDelay',
             'huhMenu_openingDuration',
             'huhMenu_closingDuration',
+            'huhMenu_triggerClassesForChildfreeLevel1'
         ];
 
         $dataAttributes = [];

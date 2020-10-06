@@ -11,6 +11,7 @@ class MenuBundle {
             let maxTriggerLevel = menu.getAttribute('data-max-trigger-level'),
                 closeDelay = menu.getAttribute('data-close-delay'),
                 closingDuration = menu.getAttribute('data-closing-duration'),
+                triggerClassesForChildfreeLevel1 = menu.getAttribute('data-trigger-classes-for-childfree-level1'),
                 triggerActivatedLinkClasses = [];
 
             if (maxTriggerLevel == 0) {
@@ -19,6 +20,10 @@ class MenuBundle {
                 for (let i = 1; i <= maxTriggerLevel; i++) {
                     triggerActivatedLinkClasses.push('.level_' + i + ' > .submenu > a.submenu');
                 }
+            }
+
+            if (triggerClassesForChildfreeLevel1 === '1') {
+                triggerActivatedLinkClasses.push('.level_1 > .nav-item > a.nav-link');
             }
 
             let links = menu.querySelectorAll(triggerActivatedLinkClasses),
@@ -76,31 +81,33 @@ class MenuBundle {
                     }, closeDelay);
                 });
 
-                link.nextElementSibling.addEventListener('mouseleave', (e) => {
-                    if (MenuBundle.isElementCurrentlyHovered(link) || MenuBundle.isElementCurrentlyHovered(link.nextElementSibling)) {
-                        return;
-                    }
-
-                    setTimeout(() => {
+                if (null !== link.nextElementSibling) {
+                    link.nextElementSibling.addEventListener('mouseleave', (e) => {
                         if (MenuBundle.isElementCurrentlyHovered(link) || MenuBundle.isElementCurrentlyHovered(link.nextElementSibling)) {
                             return;
                         }
 
-                        MenuBundle.addClosingClassToElements([link, link.nextElementSibling]);
-                        MenuBundle.addClosingClassToMenu(menu, closeBlockingElements);
-
                         setTimeout(() => {
-                            MenuBundle.removeClassFromElements('closing', [link, link.nextElementSibling])
-
                             if (MenuBundle.isElementCurrentlyHovered(link) || MenuBundle.isElementCurrentlyHovered(link.nextElementSibling)) {
                                 return;
                             }
 
-                            MenuBundle.removeClassFromElements('open', [e.target, link]);
-                            MenuBundle.removeMenuOpenState(menu, closeBlockingElements);
-                        }, closingDuration);
-                    }, closeDelay);
-                });
+                            MenuBundle.addClosingClassToElements([link, link.nextElementSibling]);
+                            MenuBundle.addClosingClassToMenu(menu, closeBlockingElements);
+
+                            setTimeout(() => {
+                                MenuBundle.removeClassFromElements('closing', [link, link.nextElementSibling])
+
+                                if (MenuBundle.isElementCurrentlyHovered(link) || MenuBundle.isElementCurrentlyHovered(link.nextElementSibling)) {
+                                    return;
+                                }
+
+                                MenuBundle.removeClassFromElements('open', [e.target, link]);
+                                MenuBundle.removeMenuOpenState(menu, closeBlockingElements);
+                            }, closingDuration);
+                        }, closeDelay);
+                    });
+                }
             });
 
             document.querySelector('body').addEventListener('touchstart', (e) => {
@@ -181,7 +188,7 @@ class MenuBundle {
                     link.classList.add('open');
                 }
 
-                if (!link.nextElementSibling.classList.contains('open')) {
+                if (link.nextElementSibling !== null && !link.nextElementSibling.classList.contains('open')) {
                     link.nextElementSibling.classList.add('open');
                 }
             }, openingDuration);
@@ -190,6 +197,10 @@ class MenuBundle {
 
     static isElementCurrentlyHovered(element) {
         let found = false;
+
+        if (element === null) {
+            return false;
+        }
 
         document.querySelectorAll( ':hover' ).forEach((hoveredElement) => {
             if (hoveredElement === element) {
@@ -213,7 +224,7 @@ class MenuBundle {
             }
         }
 
-        if (!block && openedElements.length < 1 /*&& !MenuBundle.isElementCurrentlyHovered(menu)*/) {
+        if (!block && openedElements.length < 1) {
             menu.classList.remove('open');
 
             document.dispatchEvent(new CustomEvent('huhMenu:closed', {detail: menu, bubbles: true, cancelable: true}));
@@ -240,7 +251,7 @@ class MenuBundle {
 
     static addOpeningClassToElements(elements) {
         elements.forEach((element) => {
-            if (!element.classList.contains('opening') && !element.classList.contains('open')) {
+            if (null !== element && !element.classList.contains('opening') && !element.classList.contains('open')) {
                 if (element.classList.contains('mod_huh_menu')) {
                     document.dispatchEvent(new CustomEvent('huhMenu:opening', {detail: element, bubbles: true, cancelable: true}));
                 }
@@ -252,13 +263,15 @@ class MenuBundle {
 
     static removeClassFromElements(className, elements) {
         elements.forEach((element) => {
-            element.classList.remove(className);
+            if (element !== null) {
+                element.classList.remove(className);
+            }
         });
     }
 
     static addClosingClassToElements(elements) {
         elements.forEach((element) => {
-            if (!element.classList.contains('closing') && element.classList.contains('open')) {
+            if (null !== element && !element.classList.contains('closing') && element.classList.contains('open')) {
                 element.classList.add('closing');
             }
         });

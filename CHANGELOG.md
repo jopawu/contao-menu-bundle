@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2020-10-06
+- added new option `triggerClassesForChildfreeLevel1`
+
 ## [0.3.1] - 2020-09-30
 - fixed menu open class issue
 
