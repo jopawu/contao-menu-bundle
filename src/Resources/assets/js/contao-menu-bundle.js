@@ -38,7 +38,8 @@ class MenuBundle {
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
 
-                    if (window.navigator.maxTouchPoints == 0) {
+                    // if mouse cursor or the menu has no sub pages
+                    if (window.navigator.maxTouchPoints == 0 || !link.classList.contains('submenu')) {
                         let url = link.getAttribute('href');
 
                         if (url !== null && url.length > 0) {

@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.4.1] - 2021-03-31
+- links without sub pages are now also opened on touch devices on tap
+
 ## [0.4.0] - 2020-10-06
 - added new option `triggerClassesForChildfreeLevel1`
 
