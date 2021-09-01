@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.1] - 2021-09-01
+
+- Added: php8 support
+
 ## [0.5.0] - 2021-05-27
 
 - added bootstrap5 template
