@@ -5,11 +5,18 @@ namespace HeimrichHannot\MenuBundle\FrontendModule;
 use Contao\FrontendTemplate;
 use Contao\ModuleSitemap;
 use Contao\PageModel;
+use Contao\System;
 
 trait NavigationTrait
 {
     protected function renderNavigation($pid, $level = 1, $host = null, $language = null, $module = null)
     {
+        if (System::getContainer()->has('HeimrichHannot\EncoreBundle\Asset\FrontendAsset')) {
+            System::getContainer()->get('HeimrichHannot\EncoreBundle\Asset\FrontendAsset')->addActiveEntrypoint(
+                'contao-menu-bundle'
+            );
+        }
+
         // Get all active subpages
         $objSubpages = \PageModel::findPublishedSubpagesWithoutGuestsByPid($pid, $this->showHidden, $this instanceof ModuleSitemap);
 
@@ -104,7 +111,7 @@ trait NavigationTrait
                 $trail = \in_array($objSubpage->id, $objPage->trail);
 
                 // Use the path without query string to check for active pages (see #480)
-                list($path) = explode('?', \Environment::get('request'), 2);
+                [$path] = explode('?', \Environment::get('request'), 2);
 
                 // Active page
                 if (($objPage->id == $objSubpage->id || ($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo)) && !($this instanceof ModuleSitemap) && $href == $path) {

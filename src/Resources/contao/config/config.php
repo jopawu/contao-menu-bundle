@@ -9,4 +9,4 @@ $GLOBALS['FE_MOD']['navigationMenu'][\HeimrichHannot\MenuBundle\FrontendModule\C
 /**
  * Hooks
  */
-$GLOBALS['TL_HOOKS']['loadDataContainer'][] = [\HeimrichHannot\MenuBundle\EventListener\LoadDataContainerListener::class, '__invoke'];
+$GLOBALS['TL_HOOKS']['loadDataContainer'][] = [\HeimrichHannot\MenuBundle\EventListener\Contao\LoadDataContainerListener::class, '__invoke'];

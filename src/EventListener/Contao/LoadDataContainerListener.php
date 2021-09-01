@@ -1,6 +1,6 @@
 <?php
 
-namespace HeimrichHannot\MenuBundle\EventListener;
+namespace HeimrichHannot\MenuBundle\EventListener\Contao;
 
 use HeimrichHannot\UtilsBundle\Container\ContainerUtil;
 
