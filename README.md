@@ -40,6 +40,8 @@ if a mouse is attached but also in tablet mode while the user uses his finger. I
 
 ### The menu closes when I hover above a submenu
 
+HTML document have to be in `standards` mode. Make sure <!DOCTYPE html> is set!
+
 This is in most cases caused by CSS margins. Please only use paddings to adjust dimensions of the menus items. Please make sure that submenus (ul and li) take the space
 where the cursor can be over.
 
