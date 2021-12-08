@@ -2,8 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased] - 202x-xx-xx
+## [0.5.3] - 2021-12-08
 
+- Fixed: null checks
 - Changed: updated readme
 
 ## [0.5.2] - 2021-09-01
