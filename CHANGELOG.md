@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.4] - 2022-02-10
+
+- Removed: usage of Utf8 bundle functions
+
 ## [0.5.3] - 2021-12-08
 
 - Fixed: null checks

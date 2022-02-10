@@ -1,9 +1,7 @@
 <?php
 
 /*
- * This file is part of Contao.
- *
- * (c) Leo Feyer
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -14,15 +12,14 @@ use Contao\BackendTemplate;
 use Contao\ModuleNavigation;
 use Contao\PageModel;
 use Contao\System;
-use Patchwork\Utf8;
 
 class MenuModule extends ModuleNavigation
 {
     use NavigationTrait;
 
-    protected $strTemplate = 'mod_huh_menu';
-
     const TYPE = 'huh_menu';
+
+    protected $strTemplate = 'mod_huh_menu';
 
     public function generate()
     {
@@ -30,25 +27,25 @@ class MenuModule extends ModuleNavigation
             /** @var BackendTemplate|object $objTemplate */
             $objTemplate = new \BackendTemplate('be_wildcard');
 
-            $objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD'][$this->type][0]) . ' ###';
-            $objTemplate->title    = $this->headline;
-            $objTemplate->id       = $this->id;
-            $objTemplate->link     = $this->name;
-            $objTemplate->href     = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+            $objTemplate->wildcard = '### '.$GLOBALS['TL_LANG']['FMD'][$this->type][0].' ###';
+            $objTemplate->title = $this->headline;
+            $objTemplate->id = $this->id;
+            $objTemplate->link = $this->name;
+            $objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id='.$this->id;
 
             return $objTemplate->parse();
         }
 
         $strBuffer = parent::generate();
 
-        return ($this->Template->items != '') ? $strBuffer : '';
+        return ('' != $this->Template->items) ? $strBuffer : '';
     }
 
     protected function compile()
     {
         // **start** taken from ModuleNavigation::compile (can be removed after https://github.com/contao/contao/issues/155 has been implemented)
 
-        /** @var PageModel $objPage */
+        /* @var PageModel $objPage */
         global $objPage;
 
         // Set the trail and level
@@ -73,13 +70,13 @@ class MenuModule extends ModuleNavigation
             }
 
             // Set the domain
-            if ($objRootPage->rootId != $objPage->rootId && $objRootPage->domain != '' && $objRootPage->domain != $objPage->domain) {
+            if ($objRootPage->rootId != $objPage->rootId && '' != $objRootPage->domain && $objRootPage->domain != $objPage->domain) {
                 $host = $objRootPage->domain;
             }
         }
 
-        $this->Template->request        = ampersand(\Environment::get('indexFreeRequest'));
-        $this->Template->skipId         = 'skipNavigation' . $this->id;
+        $this->Template->request = ampersand(\Environment::get('indexFreeRequest'));
+        $this->Template->skipId = 'skipNavigation'.$this->id;
         $this->Template->skipNavigation = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['skipNavigation']);
 
         // **end**
@@ -95,7 +92,7 @@ class MenuModule extends ModuleNavigation
             'huhMenu_closeDelay',
             'huhMenu_openingDuration',
             'huhMenu_closingDuration',
-            'huhMenu_triggerClassesForChildfreeLevel1'
+            'huhMenu_triggerClassesForChildfreeLevel1',
         ];
 
         $dataAttributes = [];
