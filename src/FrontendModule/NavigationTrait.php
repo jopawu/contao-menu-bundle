@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -50,7 +50,10 @@ trait NavigationTrait
         /** @var FrontendTemplate|object $objTemplate */
         $objTemplate = new \FrontendTemplate($this->navigationTpl);
 
-        $objTemplate->setData($module->arrData);
+        if (isset($module) && \is_array($module)) {
+            $objTemplate->setData($module->arrData);
+        }
+
         $objTemplate->pid = $pid;
         $objTemplate->type = static::class;
         $objTemplate->cssID = $this->cssID; // see #4897
