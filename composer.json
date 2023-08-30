@@ -1,5 +1,5 @@
 {
-    "name": "heimrichhannot/contao-menu-bundle",
+    "name": "jopawu/contao-menu-bundle",
     "type": "contao-bundle",
     "description": "This bundle adds a multi-level menu module for the Contao CMS.",
     "keywords": [
